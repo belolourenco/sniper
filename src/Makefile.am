@@ -28,7 +28,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 AM_CPPFLAGS = $(EXTRA_CXXFLAGS) $(LLVM_CPPFLAGS)
-AM_CXXFLAGS = $(LLVM_CXXFLAGS) -fexceptions
+AM_CXXFLAGS = $(LLVM_CXXFLAGS) -fexceptions -std=c++11
 #-Wall -O3 -fno-rtti -fexceptions -stdlib=libc++ -mmacosx-version-min=10.7    #-std=c++11 -stdlib=libc++ -stdlib=libstdc++
 #AM_LDFLAGS = -lyices
 
