@@ -39,16 +39,17 @@ SNIPER. Refer to [SNIPER repository](https://github.com/lamraoui/sniper) for det
 
 The SNIPER-VCGen can be executed by command line as follows:
 
-...	$ clang file.c -S -emit-llvm -O0 -gline-tables-only -o file.bc 
-...	$ ./sniper -vcgen -function=f -cfile=file.c -unroll=10 -method=1 file.bc 
+> > > $ clang file.c -S -emit-llvm -O0 -gline-tables-only -o file.bc 
+
+> > > $ ./sniper -vcgen -function=f -cfile=file.c -unroll=10 -method=1 file.bc 
 
 For additional information run:
 
-... $ ./sniper --help
+> > > $ ./sniper --help
 
 For executing the benchmarks run:
 
-... $ ./run_benchmarks
+> > > $ ./run_benchmarks
 
 ## Licence
 
