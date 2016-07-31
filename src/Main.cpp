@@ -71,6 +71,16 @@ int main(int argc, char **argv) {
             std::cout << "NDEBUG is not defined. Assert enabled.\n";
 #endif
         }
+
+        // RUN VCGen
+        if(opt -> getBackend() == 1){
+            std::cout << "Launching VCGen backend\n";
+            VCGenFrontend *vcgen = new VCGenFrontend(opt, &outs());
+            vcgen -> init(argv[0]);
+            vcgen -> launch();
+            vcgen -> finish();
+            return 0;
+        }
         
         MSTimer timer;
         if(opt->printDuration()) {
@@ -108,16 +118,6 @@ int main(int argc, char **argv) {
         }
         if(opt->dbgMsg())
             std::cout << "Bitcode file loaded\n";
-    
-        // RUN VCGen
-        if(opt -> backend() == 1){
-            std::cout << "Launching VCGen backend\n";
-            VCGenFrontend *vcgen = new VCGenFrontend(llvmMod, opt, &outs());
-            vcgen -> init();
-            vcgen -> launch();
-            vcgen -> finish();
-            return 0;
-        }
 
         // Run frontend
         if(opt->dbgMsg())

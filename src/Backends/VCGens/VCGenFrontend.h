@@ -19,6 +19,9 @@
 #include <llvm/PassManager.h>
 #include <llvm/Transforms/IPO.h>
 #include <llvm/Transforms/Scalar.h>
+#include <llvm/Support/Signals.h>
+#include "llvm/Support/SourceMgr.h"
+#include "llvm/IRReader/IRReader.h"
 
 #include "../../Options.h"
 #include "../../Frontend/LocalVariables.h"
@@ -58,9 +61,9 @@ private:
   std::set<Value*> allArrayVars;
 
 public:
-  VCGenFrontend(Module *_llvmMod, Options *_opts, raw_ostream *_OS);
+  VCGenFrontend(Options *_opts, raw_ostream *_OS);
   ~VCGenFrontend(){};
-  void init();
+  void init(char *prog_name);
   void launch();
   void finish();
 

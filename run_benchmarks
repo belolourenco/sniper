@@ -28,270 +28,270 @@ then
 fi
 
 progs=(
-    my_bench/teste100-2.c assume 10
-    my_bench/teste100-2.c assume 20
-    my_bench/teste100-2.c assume 30
+    my_bench/teste100-2.c assume_ann 10
+    my_bench/teste100-2.c assume_ann 20
+    my_bench/teste100-2.c assume_ann 30
 
-    #my_bench/teste100-2.c assume 100
-    #my_bench/teste100-2.c assume 200
-    #my_bench/teste100-2.c assume 300
-    #my_bench/teste100-2.c assume 400
-    #my_bench/teste100-2.c assume 500
-    #my_bench/teste100-2.c assume 600
-    #my_bench/teste100-2.c assume 700
-    #my_bench/teste100-2.c assume 800
+    #my_bench/teste100-2.c assume_ann 100
+    #my_bench/teste100-2.c assume_ann 200
+    #my_bench/teste100-2.c assume_ann 300
+    #my_bench/teste100-2.c assume_ann 400
+    #my_bench/teste100-2.c assume_ann 500
+    #my_bench/teste100-2.c assume_ann 600
+    #my_bench/teste100-2.c assume_ann 700
+    #my_bench/teste100-2.c assume_ann 800
 
-    #my_bench/teste100-2.c assume 50
-    #my_bench/teste100-2.c assume 60
-    #my_bench/teste100-2.c assume 70
-    #my_bench/teste100-2.c assume 80
-    #my_bench/teste100-2.c assume 90
-    #my_bench/teste100-2.c assume 100
-    #my_bench/teste100-2.c assume 200
-    #my_bench/teste100-2.c assume 300
+    #my_bench/teste100-2.c assume_ann 50
+    #my_bench/teste100-2.c assume_ann 60
+    #my_bench/teste100-2.c assume_ann 70
+    #my_bench/teste100-2.c assume_ann 80
+    #my_bench/teste100-2.c assume_ann 90
+    #my_bench/teste100-2.c assume_ann 100
+    #my_bench/teste100-2.c assume_ann 200
+    #my_bench/teste100-2.c assume_ann 300
 
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-2.c assert 2
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-12.c assert 12
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-20.c assert 20
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-22.c assert 22
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-30.c assert 30
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-32.c assert 32
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-40.c assert 40
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-42.c assert 42
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-50.c assert 50
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-52.c assert 52
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-60.c assert 60
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-62.c assert 62
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-70.c assert 70
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-72.c assert 72
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-80.c assert 80
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-82.c assert 82
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-90.c assert 90
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-92.c assert 92
-    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-100.c assert 100
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-2.c assert 2
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-3.c assert 3
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-4.c assert 4
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-5.c assert 5
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-6.c assert 6
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-7.c assert 7
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-8.c assert 8
-    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-9.c assert 9
-    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-10.c  assert 9
-    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-20.c assert 19
-    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-30.c assert 29
-    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-40.c assert 39
-    # eureka/complete-set/safe/eurekaintegertrace-graycodes_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-graycodes_safe-12.c assert 12
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-2.c assert 2
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-3.c assert 3
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-4.c assert 4
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-5.c assert 5
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-6.c assert 6
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-7.c assert 7
-    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-8.c assert 8
-    # eureka/complete-set/safe/eurekaintegertrace-reverseiter_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-reverseiter_safe-20.c assert 20
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-2.c assert 2
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-3.c assert 3
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-4.c assert 4
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-5.c assert 5
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-6.c assert 6
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-7.c assert 7
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-8.c assert 8
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-9.c assert 9
-    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-20.c assert 20
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-30.c assert 30
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-40.c assert 40
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-50.c assert 50
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-60.c assert 60
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-70.c assert 70
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-80.c assert 80
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-90.c assert 90
-    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-100.c assert 100
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-20.c assert 20
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-30.c assert 30
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-40.c assert 40
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-50.c assert 50
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-60.c assert 60
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-70.c assert 70
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-80.c assert 80
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-90.c assert 90
-    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-100.c assert 100
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-10.c assert 10
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-11.c assert 11
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-12.c assert 12
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-13.c assert 13
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-14.c assert 14
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-15.c assert 15
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-16.c assert 16
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-17.c assert 17
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-18.c assert 18
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-19.c assert 19
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-20.c assert 20
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-21.c assert 21
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-22.c assert 22
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-23.c assert 23
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-24.c assert 24
-    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-25.c assert 25
-    # eureka/complete-set/safe/eurekaintegertrace-sum01_safe-1.c assume 300
-    # eureka/complete-set/safe/eurekaintegertrace-sum03_safe-1.c assume 400
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-2.c assert_ann 2
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-12.c assert_ann 12
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-20.c assert_ann 20
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-22.c assert_ann 22
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-30.c assert_ann 30
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-32.c assert_ann 32
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-40.c assert_ann 40
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-42.c assert_ann 42
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-50.c assert_ann 50
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-52.c assert_ann 52
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-60.c assert_ann 60
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-62.c assert_ann 62
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-70.c assert_ann 70
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-72.c assert_ann 72
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-80.c assert_ann 80
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-82.c assert_ann 82
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-90.c assert_ann 90
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-92.c assert_ann 92
+    # eureka/complete-set/safe/eurekaintegertrace-bresenham_safe-100.c assert_ann 100
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-2.c assert_ann 2
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-3.c assert_ann 3
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-4.c assert_ann 4
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-5.c assert_ann 5
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-6.c assert_ann 6
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-7.c assert_ann 7
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-8.c assert_ann 8
+    # eureka/complete-set/safe/eurekaintegertrace-bubblesort_safe-9.c assert_ann 9
+    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-10.c  assert_ann 9
+    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-20.c assert_ann 19
+    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-30.c assert_ann 29
+    # eureka/complete-set/safe/eurekaintegertrace-fibonacci_safe-40.c assert_ann 39
+    # eureka/complete-set/safe/eurekaintegertrace-graycodes_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-graycodes_safe-12.c assert_ann 12
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-2.c assert_ann 2
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-3.c assert_ann 3
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-4.c assert_ann 4
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-5.c assert_ann 5
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-6.c assert_ann 6
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-7.c assert_ann 7
+    # eureka/complete-set/safe/eurekaintegertrace-insertionsort_safe-8.c assert_ann 8
+    # eureka/complete-set/safe/eurekaintegertrace-reverseiter_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-reverseiter_safe-20.c assert_ann 20
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-2.c assert_ann 2
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-3.c assert_ann 3
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-4.c assert_ann 4
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-5.c assert_ann 5
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-6.c assert_ann 6
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-7.c assert_ann 7
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-8.c assert_ann 8
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-9.c assert_ann 9
+    # eureka/complete-set/safe/eurekaintegertrace-selectionsort_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-20.c assert_ann 20
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-30.c assert_ann 30
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-40.c assert_ann 40
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-50.c assert_ann 50
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-60.c assert_ann 60
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-70.c assert_ann 70
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-80.c assert_ann 80
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-90.c assert_ann 90
+    # eureka/complete-set/safe/eurekaintegertrace-strcmp_safe-100.c assert_ann 100
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-20.c assert_ann 20
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-30.c assert_ann 30
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-40.c assert_ann 40
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-50.c assert_ann 50
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-60.c assert_ann 60
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-70.c assert_ann 70
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-80.c assert_ann 80
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-90.c assert_ann 90
+    # eureka/complete-set/safe/eurekaintegertrace-strcopy_safe-100.c assert_ann 100
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-10.c assert_ann 10
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-11.c assert_ann 11
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-12.c assert_ann 12
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-13.c assert_ann 13
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-14.c assert_ann 14
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-15.c assert_ann 15
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-16.c assert_ann 16
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-17.c assert_ann 17
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-18.c assert_ann 18
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-19.c assert_ann 19
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-20.c assert_ann 20
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-21.c assert_ann 21
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-22.c assert_ann 22
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-23.c assert_ann 23
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-24.c assert_ann 24
+    # eureka/complete-set/safe/eurekaintegertrace-strmatch3_safe-25.c assert_ann 25
+    # eureka/complete-set/safe/eurekaintegertrace-sum01_safe-1.c assume_ann 300
+    # eureka/complete-set/safe/eurekaintegertrace-sum03_safe-1.c assume_ann 400
 
-    # invgen/apache-escape-absolute.c assume 30
-    # invgen/apache-get-tag.c assume 4
-    # invgen/bind_expands_vars2.c assume 200
-    # invgen/down.c assume 200
-    # invgen/fragtest_simple.c assume 150
-    # invgen/gulwani_cegar1.c assume 230
-    # invgen/gulwani_cegar2.c assume 200
-    # invgen/gulwani_fig1a.c assume 200
-    # invgen/half.c assume 60
-    # invgen/heapsort.c assume 10
-    # invgen/heapsort1.c assume 10
-    # invgen/heapsort2.c assume 10
-    # invgen/heapsort3.c assume 10
-    # invgen/mergesort.c assume 7
-    # invgen/nest-if.c assume 15
-    # invgen/nest-if1.c assume 15
-    # invgen/nest-if2.c assume 15
-    # invgen/nest-if3.c assume 15
-    # invgen/nest-if4.c assume 15
-    # invgen/nest-if5.c assume 15
-    # invgen/nest-if6.c assume 15
-    # ##invgen/nest-if7.c assume 15
+    # invgen/apache-escape-absolute.c assume_ann 30
+    # invgen/apache-get-tag.c assume_ann 4
+    # invgen/bind_expands_vars2.c assume_ann 200
+    # invgen/down.c assume_ann 200
+    # invgen/fragtest_simple.c assume_ann 150
+    # invgen/gulwani_cegar1.c assume_ann 230
+    # invgen/gulwani_cegar2.c assume_ann 200
+    # invgen/gulwani_fig1a.c assume_ann 200
+    # invgen/half.c assume_ann 60
+    # invgen/heapsort.c assume_ann 10
+    # invgen/heapsort1.c assume_ann 10
+    # invgen/heapsort2.c assume_ann 10
+    # invgen/heapsort3.c assume_ann 10
+    # invgen/mergesort.c assume_ann 7
+    # invgen/nest-if.c assume_ann 15
+    # invgen/nest-if1.c assume_ann 15
+    # invgen/nest-if2.c assume_ann 15
+    # invgen/nest-if3.c assume_ann 15
+    # invgen/nest-if4.c assume_ann 15
+    # invgen/nest-if5.c assume_ann 15
+    # invgen/nest-if6.c assume_ann 15
+    # ##invgen/nest-if7.c assume_ann 15
     # #####
-    # ##invgen/nest-if8.c assume 10
-    # ##invgen/nested1.c assume 120
-    # invgen/NetBSD_g_Ctoc.c assume 100
-    # invgen/NetBSD_glob3_iny.c assume 3
-    # invgen/NetBSD_loop.c assume 100
-    # invgen/NetBSD_loop_int.c assume 100
-    # invgen/rajamani_1.c assume 17
-    # invgen/sendmail-close-angle.c assume 60
-    # invgen/sendmail-mime-fromqp.c assume 6
-    # invgen/sendmail-mime7to8_arr_three_chars_no_test_ok.c assume 20
-    # invgen/seq-len.c assume 15
-    # invgen/seq-proc.c assume 30
-    # invgen/seq-sim.c assume 30
-    # invgen/seq-z3.c assume 50
-    # invgen/seq.c assume 50
-    # invgen/seq2.c assume 30
-    # invgen/seq3.c assume 30
-    # invgen/seq4.c assume 30
-    # invgen/simple.c assume 300
-    # invgen/simple_if.c assume 100
-    # invgen/simple_nest.c assume 100
-    # invgen/split.c assume 100
-    # invgen/svd-some-loop.c assume 4
-    # invgen/svd.c assume 3
-    # invgen/svd1.c assume 3
-    # invgen/svd2.c assume 3
-    # invgen/svd3.c assume 3
-    # invgen/svd4.c assume 3
-    # invgen/up.c assume 100
-    # invgen/up2.c assume 100
-    # invgen/up3.c assume 100
-    # invgen/up4.c assume 100
-    # invgen/up5.c assume 100
+    # ##invgen/nest-if8.c assume_ann 10
+    # ##invgen/nested1.c assume_ann 120
+    # invgen/NetBSD_g_Ctoc.c assume_ann 100
+    # invgen/NetBSD_glob3_iny.c assume_ann 3
+    # invgen/NetBSD_loop.c assume_ann 100
+    # invgen/NetBSD_loop_int.c assume_ann 100
+    # invgen/rajamani_1.c assume_ann 17
+    # invgen/sendmail-close-angle.c assume_ann 60
+    # invgen/sendmail-mime-fromqp.c assume_ann 6
+    # invgen/sendmail-mime7to8_arr_three_chars_no_test_ok.c assume_ann 20
+    # invgen/seq-len.c assume_ann 15
+    # invgen/seq-proc.c assume_ann 30
+    # invgen/seq-sim.c assume_ann 30
+    # invgen/seq-z3.c assume_ann 50
+    # invgen/seq.c assume_ann 50
+    # invgen/seq2.c assume_ann 30
+    # invgen/seq3.c assume_ann 30
+    # invgen/seq4.c assume_ann 30
+    # invgen/simple.c assume_ann 300
+    # invgen/simple_if.c assume_ann 100
+    # invgen/simple_nest.c assume_ann 100
+    # invgen/split.c assume_ann 100
+    # invgen/svd-some-loop.c assume_ann 4
+    # invgen/svd.c assume_ann 3
+    # invgen/svd1.c assume_ann 3
+    # invgen/svd2.c assume_ann 3
+    # invgen/svd3.c assume_ann 3
+    # invgen/svd4.c assume_ann 3
+    # invgen/up.c assume_ann 100
+    # invgen/up2.c assume_ann 100
+    # invgen/up3.c assume_ann 100
+    # invgen/up4.c assume_ann 100
+    # invgen/up5.c assume_ann 100
 
 #     #unsafe
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-2.c  assume 2
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-10.c assume 10
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-12.c assume 12
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-20.c assume 20
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-22.c assume 22
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-30.c assume 30
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-32.c assume 32
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-40.c assume 40
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-42.c assume 42
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-50.c assume 50
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-52.c assume 52
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-60.c assume 60
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-62.c assume 62
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-70.c assume 70
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-72.c assume 72
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-80.c assume 80
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-82.c assume 82
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-90.c assume 90
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-92.c assume 92
-    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-100.c assume 100
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-2.c assume 2
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-3.c assume 3
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-4.c assume 4
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-5.c assume 5
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-6.c assume 6
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-7.c assume 7
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-8.c assume 8
-    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-9.c assume 9
-    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-10.c assume 9
-    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-20.c assume 19
-    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-30.c assume 29
-    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-40.c assume 39
-    # eureka/complete-set/unsafe/eurekaintegertrace-graycodes_unsafe-10.c assume 10
-    # eureka/complete-set/unsafe/eurekaintegertrace-graycodes_unsafe-12.c assume 12
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-2.c assume 2
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-3.c assume 3
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-4.c assume 4
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-5.c assume 5
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-6.c assume 6
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-7.c assume 7
-    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-8.c assume 8
-    # eureka/complete-set/unsafe/eurekaintegertrace-reverseiter_unsafe-10.c assume 10
-    # eureka/complete-set/unsafe/eurekaintegertrace-reverseiter_unsafe-20.c assume 20
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-2.c assume 2
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-3.c assume 3
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-4.c assume 4
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-5.c assume 5
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-6.c assume 6
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-7.c assume 7
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-8.c assume 8
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-9.c assume 9
-    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-10.c assume 10
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-10.c assume 10
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-20.c assume 20
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-30.c assume 30
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-40.c assume 40
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-50.c assume 50
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-60.c assume 60
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-70.c assume 70
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-80.c assume 80
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-90.c assume 90
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-100.c assume 1000
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-10.c assume 11
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-20.c assume 21
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-30.c assume 31
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-40.c assume 41
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-50.c assume 51
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-60.c assume 61
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-70.c assume 71
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-80.c assume 81
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-90.c assume 91
-    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-100.c assume 101
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-10.c assume 10
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-11.c assume 11
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-12.c assume 12
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-13.c assume 13
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-14.c assume 14
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-15.c assume 15
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-16.c assume 16
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-17.c assume 17
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-18.c assume 18
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-19.c assume 19
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-20.c assume 20
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-21.c assume 21
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-22.c assume 22
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-23.c assume 23
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-24.c assume 24
-    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-25.c assume 25
-    # eureka/complete-set/unsafe/eurekaintegertrace-sum01-bug02_unsafe-1.c assume 300
-    # eureka/complete-set/unsafe/eurekaintegertrace-sum01_bug02_sum01_bug02_base.case_unsafe-1.c assume 400
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-2.c  assume_ann 2
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-10.c assume_ann 10
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-12.c assume_ann 12
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-20.c assume_ann 20
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-22.c assume_ann 22
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-30.c assume_ann 30
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-32.c assume_ann 32
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-40.c assume_ann 40
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-42.c assume_ann 42
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-50.c assume_ann 50
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-52.c assume_ann 52
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-60.c assume_ann 60
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-62.c assume_ann 62
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-70.c assume_ann 70
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-72.c assume_ann 72
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-80.c assume_ann 80
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-82.c assume_ann 82
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-90.c assume_ann 90
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-92.c assume_ann 92
+    # eureka/complete-set/unsafe/eurekaintegertrace-bresenham_unsafe-100.c assume_ann 100
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-2.c assume_ann 2
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-3.c assume_ann 3
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-4.c assume_ann 4
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-5.c assume_ann 5
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-6.c assume_ann 6
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-7.c assume_ann 7
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-8.c assume_ann 8
+    # eureka/complete-set/unsafe/eurekaintegertrace-bubblesort_unsafe-9.c assume_ann 9
+    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-10.c assume_ann 9
+    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-20.c assume_ann 19
+    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-30.c assume_ann 29
+    # eureka/complete-set/unsafe/eurekaintegertrace-fibonacci_unsafe-40.c assume_ann 39
+    # eureka/complete-set/unsafe/eurekaintegertrace-graycodes_unsafe-10.c assume_ann 10
+    # eureka/complete-set/unsafe/eurekaintegertrace-graycodes_unsafe-12.c assume_ann 12
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-2.c assume_ann 2
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-3.c assume_ann 3
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-4.c assume_ann 4
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-5.c assume_ann 5
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-6.c assume_ann 6
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-7.c assume_ann 7
+    # eureka/complete-set/unsafe/eurekaintegertrace-insertionsort_unsafe-8.c assume_ann 8
+    # eureka/complete-set/unsafe/eurekaintegertrace-reverseiter_unsafe-10.c assume_ann 10
+    # eureka/complete-set/unsafe/eurekaintegertrace-reverseiter_unsafe-20.c assume_ann 20
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-2.c assume_ann 2
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-3.c assume_ann 3
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-4.c assume_ann 4
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-5.c assume_ann 5
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-6.c assume_ann 6
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-7.c assume_ann 7
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-8.c assume_ann 8
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-9.c assume_ann 9
+    # eureka/complete-set/unsafe/eurekaintegertrace-selectionsort_unsafe-10.c assume_ann 10
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-10.c assume_ann 10
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-20.c assume_ann 20
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-30.c assume_ann 30
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-40.c assume_ann 40
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-50.c assume_ann 50
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-60.c assume_ann 60
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-70.c assume_ann 70
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-80.c assume_ann 80
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-90.c assume_ann 90
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcmp_unsafe-100.c assume_ann 1000
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-10.c assume_ann 11
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-20.c assume_ann 21
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-30.c assume_ann 31
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-40.c assume_ann 41
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-50.c assume_ann 51
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-60.c assume_ann 61
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-70.c assume_ann 71
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-80.c assume_ann 81
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-90.c assume_ann 91
+    # eureka/complete-set/unsafe/eurekaintegertrace-strcopy_unsafe-100.c assume_ann 101
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-10.c assume_ann 10
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-11.c assume_ann 11
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-12.c assume_ann 12
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-13.c assume_ann 13
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-14.c assume_ann 14
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-15.c assume_ann 15
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-16.c assume_ann 16
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-17.c assume_ann 17
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-18.c assume_ann 18
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-19.c assume_ann 19
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-20.c assume_ann 20
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-21.c assume_ann 21
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-22.c assume_ann 22
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-23.c assume_ann 23
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-24.c assume_ann 24
+    # eureka/complete-set/unsafe/eurekaintegertrace-strmatch3_unsafe-25.c assume_ann 25
+    # eureka/complete-set/unsafe/eurekaintegertrace-sum01-bug02_unsafe-1.c assume_ann 300
+    # eureka/complete-set/unsafe/eurekaintegertrace-sum01_bug02_sum01_bug02_base.case_unsafe-1.c assume_ann 400
 #
-#     my_bench/teste100-2.c assume 400
-#     my_bench/teste100-2.c assume 500
+#     my_bench/teste100-2.c assume_ann 400
+#     my_bench/teste100-2.c assume_ann 500
 )
 
 vcgen_name(){
@@ -405,8 +405,8 @@ for (( i = 0; i < ${#progs[@]}; i+=3)); do
   printf      ", Valid, Invalid, Other, Time"    >> "$output_file"
   printf "\n"                                     >> "$output_file"
   for vcgen in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16; do #
-    echo "./run f ./src/Backends/VCGens/Benchmarks/${progs[$i]} 8 ${progs[$i+1]} ${progs[$i+2]} $vcgen 0 false true"
-    gtimeout 900s ./run "f" "./src/Backends/VCGens/Benchmarks/${progs[$i]}" "8" "${progs[$i+1]}" "${progs[$i+2]}" "$vcgen" "0" "false" "true"
+    echo "./run f ./src/Backends/VCGens/Benchmarks/${progs[$i]} 8 ${progs[$i+1]} ${progs[$i+2]} $vcgen false true"
+    gtimeout 900s ./run "f" "./src/Backends/VCGens/Benchmarks/${progs[$i]}" "8" "${progs[$i+1]}" "${progs[$i+2]}" "$vcgen" "false" "true"
     sleep 0.5
     echo "Bench: ${progs[$i]} VCGen: $vcgen" >> file_size_log.txt
     echo "$(ls -l vcs/)" >> file_size_log.txt

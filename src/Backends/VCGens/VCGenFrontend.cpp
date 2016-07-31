@@ -12,21 +12,38 @@
 #include "VCGenFrontend.h"
 
 
-VCGenFrontend::VCGenFrontend(Module *_llvmMod, Options *_opts, raw_ostream *_OS){
-  llvmMod = _llvmMod;
+VCGenFrontend::VCGenFrontend(Options *_opts, raw_ostream *_OS){
   opts    = _opts;
-  debug   = new Debug(llvmMod, opts -> getFunctionName());
   OS = _OS;
 }
 
-void VCGenFrontend::init(){
+void VCGenFrontend::init(char *prog_name){
 
-  if(opts -> getListVCGens()){
+  if(opts -> listVCGens()){
     listVCGens();
     exit(0);
   }
+
+  sys::PrintStackTraceOnErrorSignal();
+
+  // Lot of copy-paste from lli.cpp
+  LLVMContext &llvmctx = getGlobalContext();
+ 
+  // If we have a native target, initialize it to ensure  
+  // it is linked in and usable by the JIT.
+  InitializeNativeTarget();
+
+  llvmMod = NULL;
+  SMDiagnostic Err;
+  llvmMod = ParseIRFile(opts->getInputIRFilename(), Err, llvmctx);
+  if (!llvmMod) {
+      Err.print(prog_name, errs());
+      exit(1);
+  } 
+
+  debug   = new Debug(llvmMod, opts -> getFunctionName());
   
-  if(opts -> getPrintIntermediateIR())
+  if(opts -> printIntermediateIR())
     debug -> output("initial");
 
   targetF = llvmMod->getFunction(opts -> getFunctionName());
@@ -111,7 +128,7 @@ void VCGenFrontend::init(){
       checkFunctionSignature(targetF);
   }
 
-  if(opts -> getPrintIntermediateIR())
+  if(opts -> printIntermediateIR())
     debug -> output("before_rm_loops");
 
   assertF = llvmMod -> getFunction("assert");
@@ -128,7 +145,7 @@ void VCGenFrontend::init(){
   assert(arrayAux2);
 
   Function *unwindAnnotation;
-  if(opts -> getUnwindAnnotation() == "assert")
+  if(opts -> isAssertAnnotation())
       unwindAnnotation = assertF;
   else
       unwindAnnotation = assumeF;
@@ -164,10 +181,10 @@ void VCGenFrontend::init(){
   // }
   // std::cout << "\n########################\n";
 
-  if(opts -> getPrintIntermediateIR())
+  if(opts -> printIntermediateIR())
     debug -> output("final");
 
-  if(opts -> getPrintIntermediateIR()){
+  if(opts -> printIntermediateIR()){
     *OS << "Converting initial CFG to PNG\n";
     debug -> toCFG("initial");
     *OS << "Converting intermediate CFG to PNG\n";
@@ -187,7 +204,7 @@ void VCGenFrontend::init(){
 
 void VCGenFrontend::launch(){
   
-  if(opts -> getExecuteBench()){
+  if(opts -> executeBench()){
     executeBench(ctx);
     exit(0);
   }
@@ -222,13 +239,13 @@ void VCGenFrontend::launch(){
 
   //solver.toFile();
 
-  if(opts -> getGenWhy3())
+  if(opts -> genWhy3())
     solver.checkInWhy3();
   
-  if(opts -> getGenSMTLib2())
+  if(opts -> genSMTLib2())
     solver.generateSMTLib2();
   
-  if(!opts -> getGenWhy3() && !opts -> getGenSMTLib2())
+  if(!opts -> genWhy3() && !opts -> genSMTLib2())
     solver.checkVCValidity();
 
   *OS << "\n###############################\n";
@@ -255,7 +272,7 @@ void VCGenFrontend::executeBench(Context *ctx){
         outputfile << opts -> getInputCSourceFilename() << std::endl
                    << "Function: " << opts -> getFunctionName() 
                    << ",CC," << cycl_comp << std::endl
-                   << "Unwind: " << opts -> getUnwindAnnotation() << std::endl
+                   << "Unwind: " << ((opts -> isAssertAnnotation())?"assert":"assume") << std::endl
                    << "Unwind nr:, " << opts -> getUnrollCount() << std::endl
                    << "Assert in Context: "
                      << ((opts -> getAssertInContext() == 0)?"default":((opts -> getAssertInContext() == 1)?"yes":"no"))
@@ -382,22 +399,22 @@ void VCGenFrontend::finish(){
 void VCGenFrontend::listVCGens(){
   *OS << "\n";
   *OS << "0  - Symbolic Execution\n";
-  *OS << "1  - CNF global + asserts      (default: assert IN context)\n";
-  *OS << "2  - CNF global                (default: assert NOT IN context)\n";
-  *OS << "3  - CNF partial + asserts     (default: assert IN context)\n";
-  *OS << "4  - CNF partial               (default: assert NOT IN context)\n\n";
-  *OS << "5  - SSA global + asserts      (default: assert IN context)\n";
-  *OS << "6  - SSA global                (default: assert NOT IN context)\n";
-  *OS << "7  - SSA partial + asserts     (default: assert IN context)\n";
-  *OS << "8  - SSA partial               (default: assert NOT IN context)\n\n";
-  *OS << "9  - SP global + asserts       (default: assert IN context)\n";
-  *OS << "10 - SP global                 (default: assert NOT IN context)\n";
-  *OS << "11 - SP partial + asserts      (default: assert IN context)\n";
-  *OS << "12 - SP partial                (default: assert NOT IN context)\n\n";
-  *OS << "13 - Linear global + asserts   (default: assert IN context)\n";
-  *OS << "14 - Linear global             (default: assert NOT IN context)\n";
-  *OS << "15 - Linear partial + asserts  (default: assert IN context)\n";
-  *OS << "16 - Linear partial            (default: assert NOT IN context)\n\n";
+  *OS << "1  - CNF global     + asserts  (assert IN context)\n";
+  *OS << "2  - CNF global                (assert NOT IN context)\n";
+  *OS << "3  - CNF partial    + asserts  (assert IN context)\n";
+  *OS << "4  - CNF partial               (assert NOT IN context)\n\n";
+  *OS << "5  - SSA global     + asserts  (assert IN context)\n";
+  *OS << "6  - SSA global                (assert NOT IN context)\n";
+  *OS << "7  - SSA partial    + asserts  (assert IN context)\n";
+  *OS << "8  - SSA partial               (assert NOT IN context)\n\n";
+  *OS << "9  - SP global      + asserts  (assert IN context)\n";
+  *OS << "10 - SP global                 (assert NOT IN context)\n";
+  *OS << "11 - SP partial     + asserts  (assert IN context)\n";
+  *OS << "12 - SP partial                (assert NOT IN context)\n\n";
+  *OS << "13 - Linear global  + asserts  (assert IN context)\n";
+  *OS << "14 - Linear global             (assert NOT IN context)\n";
+  *OS << "15 - Linear partial + asserts  (assert IN context)\n";
+  *OS << "16 - Linear partial            (assert NOT IN context)\n\n";
 }
 
 void VCGenFrontend::chooseVCGen(int assertInCtx){

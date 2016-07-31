@@ -27,75 +27,60 @@
 
 #include "Options.h"
 
+/*==== One category for each background ====*/
+ cl::OptionCategory SniperCategory(
+    "SNIPER options",
+    "These options are to be used with SNIPER fault localization tool");
+
+ cl::OptionCategory VCGenCategory(
+    "SNIPER-VCGen options",
+    "These options are to be used with the VCGens");
+
 /*==== Global options ====*/
 
 static cl::opt <std::string>
 InputIRFilename(cl::Positional, cl::desc("Input bitcode file"),
-              cl::init("-"), cl::value_desc("filename"));
+              cl::init("-"), cl::value_desc("filename"), cl::cat(SniperCategory));
 
 static cl::opt <std::string>
 InputCSourceFilename("cfile", cl::desc("Input C source file"),
-            cl::init(""), cl::value_desc("string"));
+            cl::init(""), cl::value_desc("string"), cl::cat(SniperCategory));
 
 static cl::opt <std::string>
 FunctionName("function", cl::desc("Function name"),
-             cl::init(""), cl::value_desc("string"));
+             cl::init(""), cl::value_desc("string"), cl::cat(SniperCategory));
 
 static cl::opt <std::string>
 TestSuiteFileName("ts", cl::desc("Test suite"),
-             cl::init(""), cl::value_desc("string"));
+             cl::init(""), cl::value_desc("string"), cl::cat(SniperCategory));
 
 static cl::opt <std::string>
 GoldenOutputsFileName("go", cl::desc("Golden outputs"),
-                  cl::init(""), cl::value_desc("string"));
-
-static cl::opt <unsigned>
-VCGen("vcgen", cl::desc("<Generate Verification conditions with the specified algorithm>"),
-               cl::init(0), cl::value_desc("int"));
-
-static cl::opt <std::string>
-UnwindAnnotation("unwind", cl::desc("<Choose between assertion or assumption unwind>"),
-                           cl::init("assert"), cl::value_desc("assume/assert"));
+                  cl::init(""), cl::value_desc("string"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-ExecuteBench("execute_bench", cl::desc("<Choose whether execute the algorithm comparison>"),
-                           cl::init(false), cl::value_desc("true/false"));
+PrintModIR("print-ir",  cl::desc("Print module Intermediate Representation"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-GenWhy3("gen_why3", cl::desc("<Choose whether to generate Why3 files with vcs>"),
-                           cl::init(false), cl::value_desc("true/false"));
+PrintFunIR("print-fun",  cl::desc("Print target function Intermediate representation"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-GenSMTLib2("gen_SMTLib2", cl::desc("<Choose whether to generate SMT-lib v2 files with vcs>"),
-                           cl::init(false), cl::value_desc("true/false"));
-
-static cl::opt <int>
-AssertInContext("assert_in_context", cl::desc("<Choose whether insert or not the asserts into context (if possible)>"),
-                           cl::init(0), cl::value_desc("int"));
+PrintTF("print-tf",  cl::desc("Print the Trace Formula"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-PrintModIR("print-ir",  cl::desc("Print module Intermediate Representation"));
+PrintDuration("print-dura", cl::desc("Print the processing duration"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-PrintFunIR("print-fun",  cl::desc("Print target function Intermediate representation"));
+PrintMUS("print-mus", cl::desc("Print the MUSes"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-PrintTF("print-tf",  cl::desc("Print the Trace Formula"));
-
-static cl::opt <bool>
-PrintDuration("print-dura", cl::desc("Print the processing duration"));
-
-static cl::opt <bool>
-PrintMUS("print-mus", cl::desc("Print the MUSes"));
-
-static cl::opt <bool>
-PrintMCS("print-mcs", cl::desc("Print the MCSes (before combination)"));
+PrintMCS("print-mcs", cl::desc("Print the MCSes (before combination)"), cl::cat(SniperCategory));
 
 static cl::opt <bool> 
-DbgMsg("dbg-msg", cl::desc("Print debug messages"));
+DbgMsg("dbg-msg", cl::desc("Print debug messages"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-Verbose("v", cl::desc("Display messages"));
+Verbose("v", cl::desc("Display messages"), cl::cat(SniperCategory));
 
 /**
  * \brief Granularity level of the encoding of target programs  
@@ -125,7 +110,7 @@ cl::opt<Granularity> TFGranularityLevel(cl::desc("Choose a level of granularity 
       clEnumVal(line,  "Line-level (default)"),
       clEnumVal(inst , "Instruction-level"),
       clEnumVal(block, "Block-level"),
-      clEnumValEnd));
+      clEnumValEnd), cl::cat(SniperCategory));
 
 /**
  * \brief Program input generation methods.  
@@ -142,32 +127,32 @@ cl::opt<Method> TracesGenerationMethod(cl::desc("Choose a traces generation meth
 cl::values(
 clEnumVal(bmc , "Bounded Model Checking, one counterexample"),
 clEnumVal(ce,   "Concolic Execution, failing/successful traces (fast)"),
-clEnumValEnd));
+clEnumValEnd), cl::cat(SniperCategory));
 
 static cl::opt <unsigned>
 UnrollCount("unroll", cl::desc("Maximum unroll count"),
-            cl::init(0), cl::value_desc("count"));
+            cl::init(0), cl::value_desc("count"), cl::cat(SniperCategory));
 
 static cl::opt <unsigned>
 MaxDepth("max-depth", cl::desc("Maximum depth"),
-            cl::init(10000), cl::value_desc("depth"));
+            cl::init(10000), cl::value_desc("depth"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-HTF("htf", cl::desc("Use Hardened TF (needs -ce)"));
+HTF("htf", cl::desc("Use Hardened TF (needs -ce)"), cl::cat(SniperCategory));
 
 static cl::opt <unsigned>
 NbLOC("loc", cl::desc("Number of line of code"),
-            cl::init(0), cl::value_desc("loc"));
+            cl::init(0), cl::value_desc("loc"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-CheckCFGModel("check-cfg-model", cl::desc("Check CFG model"));
+CheckCFGModel("check-cfg-model", cl::desc("Check CFG model"), cl::cat(SniperCategory));
 
 static cl::opt <unsigned>
 MCSMaxSize("max-mcs-size", cl::desc("Maximum size of MCSes"),
-              cl::init(UINT_MAX), cl::value_desc("MCSMaxSize"));
+              cl::init(UINT_MAX), cl::value_desc("MCSMaxSize"), cl::cat(SniperCategory));
 
 static cl::opt <bool>
-OutputCFGDotFile("cfg-dot", cl::desc("Output the CFG in a dot file."));
+OutputCFGDotFile("cfg-dot", cl::desc("Output the CFG in a dot file."), cl::cat(SniperCategory));
 
 /**
  * \brief Diagnosis combination methods. 
@@ -187,14 +172,48 @@ ChoosedCombineMethod(cl::desc("Choose a combination method:"),
     clEnumVal(fla,  "Flatten"),
     clEnumVal(pwu,  "Pair-wise union"),
     clEnumVal(mhs,  "Minimal hitting-set"),
-    clEnumValEnd));
+    clEnumValEnd), cl::cat(SniperCategory));
 
-enum BackendEnum {sniper, vcs};
-cl::opt<BackendEnum> Backend(cl::desc("Chooses backend: "),
-cl::values(
-clEnumVal(sniper , "Sniper fault localization"),
-clEnumVal(vcs,   "Verification Condition Generation"),
-clEnumValEnd));
+enum BackendEnum {sniper, vcgen};
+cl::opt<BackendEnum> Backend(cl::desc("Backend selection: "),
+    cl::values(
+        clEnumVal(sniper , "Sniper fault localization"),
+        clEnumVal(vcgen,   "Generate Verification Conditions"),
+        clEnumValEnd));
+
+static cl::opt<bool>
+ListVCGens("list-methods",cl::desc("List available VCGens methods"),
+                           cl::init(false), cl::cat(VCGenCategory));
+
+static cl::opt <unsigned>
+VCGen("method", cl::desc("Select VCGen method"),
+               cl::init(0), cl::value_desc("int"), cl::cat(VCGenCategory));
+
+enum UnwindAnn {assert_ann,assume_ann};
+static cl::opt <UnwindAnn>
+UnwindAnnotation("unwind", cl::desc("Choose unwinding annotation (Soundness vs Completeness):"),
+                 cl::values(clEnumVal(assert_ann, "unwinding assertion"),
+                            clEnumVal(assume_ann, "unwinding assumption"),
+                            clEnumValEnd),          
+                cl::init(assert_ann), cl::cat(VCGenCategory));
+
+static cl::opt <bool>
+ExecuteBench("execute_bench", cl::desc("Execute all VCGens and save results in \"./src/Backends/VCGens/Benchmarks/results/\""),
+                           cl::init(false), cl::cat(VCGenCategory));
+
+static cl::opt <bool>
+GenWhy3("gen_why3", cl::desc("Generate Why3 files with vcs (if gen_why3 and en_SMTLib2 are not set, yices solver is executed)"),
+                           cl::init(false), cl::cat(VCGenCategory));
+
+static cl::opt <bool>
+GenSMTLib2("gen_SMTLib2", cl::desc("Generate SMT-lib v2 files with vcs (if gen_why3 and en_SMTLib2 are not set, yices solver is executed)"),
+                           cl::init(false), cl::cat(VCGenCategory));
+
+static cl::opt <bool>
+PrintIntermediateIR("print-intermediateIR", 
+            cl::init(true), 
+            cl::desc("Print the intermediate transformations of the LLVM file"), 
+            cl::cat(VCGenCategory));
 
 
 /*==== Implementation ====*/
@@ -241,46 +260,6 @@ std::string Options::getTestSuiteFileName() {
 
 std::string Options::getGoldenOutputsFileName() {
     return GoldenOutputsFileName;
-}
-
-static cl::opt <bool>
-PrintIntermediateIR("print-intermediateIR", 
-            cl::init(true), cl::desc("Print the intermediate transformations of the LLVM file"));
-
-static cl::opt<bool>
-ListVCGens("list-vcgens",cl::desc("<List the available verification condition generators algorithms>"),
-                           cl::init(false), cl::value_desc("true/false"));
-
-bool Options::getListVCGens(){
-    return ListVCGens;
-}
-
-unsigned Options::getVCGen(){
-    return VCGen;
-}
-
-std::string Options::getUnwindAnnotation(){
-    return UnwindAnnotation;
-}
-
-bool Options::getExecuteBench(){
-    return ExecuteBench;
-}
-
-bool Options::getGenWhy3(){
-    return GenWhy3;
-}
-
-bool Options::getGenSMTLib2(){
-    return GenSMTLib2;
-}
-
-int Options::getAssertInContext(){
-    return AssertInContext;
-}
-
-bool Options::getPrintIntermediateIR(){
-    return PrintIntermediateIR;
 }
 
 bool Options::dbgMsg() {
@@ -363,10 +342,6 @@ bool Options::outputCFGDotFile() {
     return OutputCFGDotFile;
 }
 
-unsigned Options::backend() {
-    return Backend;
-}
-
 unsigned Options::getCombineMethod() {
     if (ChoosedCombineMethod==fla) {
         return Combine::FLA;
@@ -376,6 +351,42 @@ unsigned Options::getCombineMethod() {
         return Combine::MHS;
     }
     return Combine::NONE;
+}
+
+unsigned Options::getBackend() {
+    return Backend;
+}
+
+bool Options::listVCGens(){
+    return ListVCGens;
+}
+
+unsigned Options::getVCGen(){
+    return VCGen;
+}
+
+bool Options::isAssertAnnotation(){
+    return UnwindAnnotation == assert_ann;
+}
+
+bool Options::isAssumeAnnotation(){
+    return UnwindAnnotation == assume_ann;
+}
+
+bool Options::executeBench(){
+    return ExecuteBench;
+}
+
+bool Options::genWhy3(){
+    return GenWhy3;
+}
+
+bool Options::genSMTLib2(){
+    return GenSMTLib2;
+}
+
+bool Options::printIntermediateIR(){
+    return PrintIntermediateIR;
 }
 
 // Hide unwanted options

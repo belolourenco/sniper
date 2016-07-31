@@ -73,11 +73,11 @@ then
     	;;
     "8")
       # VCGens
-      ./src/sniper -vcs -function=$1 -cfile=$2 -execute_bench=false -unwind=$4 -unroll=$5 -vcgen=$6 -assert_in_context=$7 -print-intermediateIR=false -gen_why3=$8 -gen_SMTLib2=$9 $2.bc
+      ./src/sniper -vcgen -function=$1 -cfile=$2 -execute_bench=false -unwind=$4 -unroll=$5 -method=$6 -print-intermediateIR=false -gen_why3=$7 -gen_SMTLib2=$8 $2.bc
       ;;
     "9")
       # Run as a benchmark
-      ./src/sniper -vcs -function=$1 -cfile=$2 -execute_bench=true  -unwind=$4 -unroll=$5 -vcgen=$6 -assert_in_context=$7 -print-intermediateIR=false -gen_why3=$8 -gen_SMTLib2=$9 $2.bc
+      ./src/sniper -vcgen -function=$1 -cfile=$2 -execute_bench=true  -unwind=$4 -unroll=$5 -method=$6 -print-intermediateIR=false -gen_why3=$7 -gen_SMTLib2=$8 $2.bc
       ;;
     *)
     	echo "invalid option (x_X)"
