@@ -191,7 +191,7 @@ VCGen("method", cl::desc("Select VCGen method"),
 
 enum UnwindAnn {assert_ann,assume_ann};
 static cl::opt <UnwindAnn>
-UnwindAnnotation("unwind", cl::desc("Choose unwinding annotation (Soundness vs Completeness):"),
+UnwindAnnotation("unwind_ann", cl::desc("Choose unwinding annotation (Soundness vs Completeness):"),
                  cl::values(clEnumVal(assert_ann, "unwinding assertion"),
                             clEnumVal(assume_ann, "unwinding assumption"),
                             clEnumValEnd),          
@@ -211,7 +211,7 @@ GenSMTLib2("gen_SMTLib2", cl::desc("Generate SMT-lib v2 files with vcs (if gen_w
 
 static cl::opt <bool>
 PrintIntermediateIR("print-intermediateIR", 
-            cl::init(true), 
+            cl::init(false), 
             cl::desc("Print the intermediate transformations of the LLVM file"), 
             cl::cat(VCGenCategory));
 
