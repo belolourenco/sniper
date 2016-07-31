@@ -1,4 +1,4 @@
-# SNIPER
+# SNIPER-VCGen
 
 ## Overview
 
