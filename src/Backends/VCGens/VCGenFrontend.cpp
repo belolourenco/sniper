@@ -203,6 +203,8 @@ void VCGenFrontend::init(char *prog_name){
 }
 
 void VCGenFrontend::launch(){
+
+  *OS << "\n\n ============= Starting VC Generation ================\n\n";
   
   if(opts -> executeBench()){
     executeBench(ctx);
@@ -225,8 +227,9 @@ void VCGenFrontend::launch(){
       << std::chrono::duration <double, std::milli> (vc_gen_total_time).count() 
       << " ms\n";
 
-  *OS << "\n@@@@" << vcgenName << "@@@@\n";
+  *OS << "\n@@@@@@" << vcgenName << "@@@@@@\n";
   vcgen -> printInfo(outs());
+  *OS <<   "\n\n\tcyclomatic_complexity: " << cycl_comp << "\n";
   *OS << "\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 
   //vcgen -> print(outs());
@@ -239,21 +242,25 @@ void VCGenFrontend::launch(){
 
   //solver.toFile();
 
-  if(opts -> genWhy3())
+  if(opts -> genWhy3()){
+    *OS << "\n Generating Why3 file\n";
     solver.checkInWhy3();
+    *OS << "\n Why3 file successfully generated\n";
+  }
   
-  if(opts -> genSMTLib2())
+  if(opts -> genSMTLib2()){
+    *OS << "\n Generating SMTLib v2 file\n";
     solver.generateSMTLib2();
+    *OS << "\n SMTLib v2 file successfully generated\n";
+  }
   
-  if(!opts -> genWhy3() && !opts -> genSMTLib2())
+  if(!opts -> genWhy3() && !opts -> genSMTLib2()){
     solver.checkVCValidity();
+  
+    solver.printInfo(outs());
+  }
 
-  *OS << "\n###############################\n";
-  *OS <<   "#    " << vcgenName << "\n";
-  *OS <<   "# cyclomatic_complexity: " << cycl_comp << "\n";
-  *OS <<   "###############################\n";
-
-  solver.printInfo(outs());
+  *OS << "\n\n ============= DONE ================\n\n";
 
   return;
 }
@@ -317,39 +324,6 @@ void VCGenFrontend::executeBench(Context *ctx){
         SolveVCs solver = SolveVCs(vcs);
         * OS <<  vcgenName << " VCs iteration " << y
              << " started being solved\n";
-        
-        if(opts -> getAssertInContext() == 1 && (opts -> getVCGen() == 4|| opts -> getVCGen() == 7) ){
-            outputfile << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0
-                           << "," << 0 << "," << 0;
-            outputfile << "," << 0;
-            outputfile << "," << 0;
-            outputfile << "," << 0;
-            outputfile << "\n";
-            outputfile.close();
-            return;
-        }
-        
 
         solver.checkVCValidity();
         
