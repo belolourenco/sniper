@@ -58,11 +58,20 @@ void YicesSolver::init() {
         std::cout << msg << std::endl;
         exit(1);
     }
-    
+    // Unbounded integer
+    this->unbound_int_ty = yices_parse_type(ctx, "int");
+    if (this->unbound_int_ty==NULL) {
+        const char *msg = yices_get_last_error_message();
+        std::cout << msg << std::endl;
+        exit(1);
+    }
+
     // Create uninterpreted function type (INT->INT)
     yices_type domain[1];
-    domain[0] = int32_ty;
-    this->int32toint32_ty = yices_mk_function_type(this->ctx, domain, 1, int32_ty);
+    // domain[0] = int32_ty;
+    domain[0] = unbound_int_ty;
+    this->int32toint32_ty = yices_mk_function_type(this->ctx, domain, 1, unbound_int_ty);
+    
     // Create div and mod operator
     yices_var_decl intdiv_decl = yices_get_var_decl_from_name(ctx, "div");
     this->intdiv_op = yices_mk_var_from_decl(ctx, intdiv_decl);
@@ -71,6 +80,11 @@ void YicesSolver::init() {
     // Inform Yices that only the arithmetic theory is going to be used.
     // yices_set_arith_only (int flag);
     this->model = NULL;
+
+    //this->int_ty = int8_ty
+    //this->int_ty = int32_ty;
+    //this->int_ty = int64_ty
+    this->int_ty = unbound_int_ty;
 }
 
 void YicesSolver::addToContext(ExprPtr e) {
@@ -117,7 +131,6 @@ int YicesSolver::check(Formula *f) {
 }
 
 int YicesSolver::maxSat() {
-    assert(ctx && "Context is null!");
     // Solve the formula
     int val = yices_max_sat(ctx);
     // Save the model
@@ -274,92 +287,131 @@ void YicesSolver::clean() {
 yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
     assert(ctx && "Context is null!");
     switch (e->getOpCode()) {
-        case Expression::True:
+        case Expression::True:{
+            p.true_exps++;
             return yices_mk_true(ctx);
-        case Expression::False:
+        }
+        case Expression::False:{
+            p.false_exps++;
             return yices_mk_false(ctx);
+        }
         case Expression::UInt32Num: {
             UInt32NumExprPtr ne = std::static_pointer_cast<UInt32NumExpression>(e);
+            p.num_exps++;
             return yices_mk_num(ctx, ne->getValue());
         }
         case Expression::SInt32Num: {
             SInt32NumExprPtr ne = std::static_pointer_cast<SInt32NumExpression>(e);
+            p.num_exps++;
             return yices_mk_num(ctx, ne->getValue());
         }
         case Expression::BoolVar: {
             BoolVarExprPtr be = std::static_pointer_cast<BoolVarExpression>(e);
             // Check if the varibale has already been created
-            yices_var_decl d = 
-            yices_get_var_decl_from_name(ctx, be->getName().c_str());
-            if (d==0) {
-                d = yices_mk_bool_var_decl(ctx, be->getName().c_str());	
+            yices_var_decl d = NULL;
+            if(be->getName() == ""){
+                std::string s = "undef" + std::to_string(undef_var_count);
+                d = yices_mk_bool_var_decl(ctx, s.c_str());
+                if (toFile) std::cout << "\n(define " << s.c_str() << "::bool)";
+                undef_var_count++;
+                p.bool_vars++;
+            }else{
+                d = yices_get_var_decl_from_name(ctx, be->getName().c_str()); 
+                if (d==0) {
+                    d = yices_mk_bool_var_decl(ctx, be->getName().c_str());
+                    p.bool_vars++;
+                    if (toFile) std::cout << "\n(define " << be->getName().c_str() << "::bool)";    
+                }
             }
+            p.bool_var_exps++;
             return yices_mk_bool_var_from_decl(ctx, d);
         }
         case Expression::IntVar: {
             IntVarExprPtr ie = std::static_pointer_cast<IntVarExpression>(e);
             // Check if the varibale has already been created
-            yices_var_decl d = 
-            yices_get_var_decl_from_name(ctx, ie->getName().c_str());
-            if (d==0) {
-                d = yices_mk_var_decl(ctx, ie->getName().c_str(), int32_ty);
+            std::string varname = (ie -> getName() == "div")?"?div":ie -> getName();
+            yices_var_decl d = NULL;
+            if(varname == ""){
+                std::string s = "undef" + std::to_string(undef_var_count);
+                d = yices_mk_var_decl(ctx, s.c_str(), int_ty);
+                if (toFile) std::cout << "\n(define " << s.c_str() << "::int)";
+                p.int_vars++;
+                undef_var_count++;
+            }else{
+                d = yices_get_var_decl_from_name(ctx, varname.c_str());  
+                if (d==0) {
+                    d = yices_mk_var_decl(ctx, varname.c_str(), int_ty);
+                    p.int_vars++;
+                    if (toFile) std::cout << "\n(define " << varname.c_str() << "::int)";
+                }
             }
+            p.int_var_exps++;
             return yices_mk_var_from_decl(ctx, d);
         }
         case Expression::IntToIntVar: {
-            IntToIntVarExprPtr ie =
-            std::static_pointer_cast<IntToIntVarExpression>(e);
+            IntToIntVarExprPtr ie = std::static_pointer_cast<IntToIntVarExpression>(e);
             // Check if the varibale has already been created
             yices_var_decl d = 
-            yices_get_var_decl_from_name(ctx, ie->getName().c_str()); 	
+            yices_get_var_decl_from_name(ctx, ie->getName().c_str());   
             if (d==0) {
+                p.int_vars++;
                 d = yices_mk_var_decl(ctx, ie->getName().c_str(), int32toint32_ty);
+                if (toFile) std::cout << "\n(define " << ie->getName().c_str() << "::(-> int int))";
             }
+            p.int_var_exps++;
             return yices_mk_var_from_decl(ctx, d);
         }
         case Expression::ToParse: {
             ToParseExprPtr te = std::static_pointer_cast<ToParseExpression>(e);
+            p.parse_exps ++;
             return yices_parse_expression(ctx, te->getString().c_str());
         }
         case Expression::Gt: {
             GtExprPtr gt = std::static_pointer_cast<GtExpression>(e);
             yices_expr e1 = makeYicesExpression(gt->getExpr1());
             yices_expr e2 = makeYicesExpression(gt->getExpr2());
+            p.comparison_ops++;
             return yices_mk_gt(ctx, e1, e2); 
         }
         case Expression::Ge: {
             GeExprPtr ge = std::static_pointer_cast<GeExpression>(e);
             yices_expr e1 = makeYicesExpression(ge->getExpr1());
             yices_expr e2 = makeYicesExpression(ge->getExpr2());
+            p.comparison_ops++;
             return yices_mk_ge(ctx, e1, e2);    
         }
         case Expression::Le: {
             LeExprPtr le = std::static_pointer_cast<LeExpression>(e);
             yices_expr e1 = makeYicesExpression(le->getExpr1());
             yices_expr e2 = makeYicesExpression(le->getExpr2());
+            p.comparison_ops++;
             return yices_mk_le(ctx, e1, e2);    
         }
         case Expression::Lt: {
             LtExprPtr lt = std::static_pointer_cast<LtExpression>(e);
             yices_expr e1 = makeYicesExpression(lt->getExpr1());
             yices_expr e2 = makeYicesExpression(lt->getExpr2());
+            p.comparison_ops++;
             return yices_mk_lt(ctx, e1, e2);    
         }
         case Expression::Diseq: {
             DiseqExprPtr de = std::static_pointer_cast<DiseqExpression>(e);
             yices_expr e1 = makeYicesExpression(de->getExpr1());
             yices_expr e2 = makeYicesExpression(de->getExpr2());
+            p.comparison_ops++;
             return yices_mk_diseq(ctx, e1, e2);    
         }
         case Expression::Eq: {
             EqExprPtr ee = std::static_pointer_cast<EqExpression>(e);
             yices_expr e1 = makeYicesExpression(ee->getExpr1());
             yices_expr e2 = makeYicesExpression(ee->getExpr2());
+            p.comparison_ops++;
             return yices_mk_eq(ctx, e1, e2);    
         }
         case Expression::Not: {
             NotExprPtr ne = std::static_pointer_cast<NotExpression>(e);
             yices_expr e1 = makeYicesExpression(ne->get());
+            p.not_ops++;
             return yices_mk_not(ctx, e1);
         }
         case Expression::And: {
@@ -374,6 +426,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             for(unsigned i=0; i<n; i++) {
                 args[i] = makeYicesExpression(es[i]); 
             }   
+            p.and_ops++;
             return yices_mk_and(ctx, args, n);   
         }
         case Expression::Or: {
@@ -388,6 +441,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             for(unsigned i=0; i<n; i++) {
                 args[i] = makeYicesExpression(es[i]); 
             }   
+            p.or_ops++;
             return yices_mk_or(ctx, args, n);   
         }
         case Expression::Xor: {
@@ -458,6 +512,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             for(unsigned i=0; i<n; i++) {
                 args[i] = makeYicesExpression(es[i]); 
             }   
+            p.sum_ops++;
             return yices_mk_sum(ctx, args, n);   
         }   
         case Expression::Sub:  {
@@ -472,6 +527,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             for(unsigned i=0; i<n; i++) {
                 args[i] = makeYicesExpression(es[i]); 
             }   
+            p.sub_ops++;
             return yices_mk_sub(ctx, args, n);   
         }   
         case Expression::Mul: {
@@ -486,6 +542,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             for(unsigned i=0; i<n; i++) {
                 args[i] = makeYicesExpression(es[i]); 
             }   
+            p.mul_ops++;
             return yices_mk_mul(ctx, args, n);   
         }               
         case Expression::Ite: {
@@ -493,6 +550,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             yices_expr e1 = makeYicesExpression(ie->getExpr1());
             yices_expr e2 = makeYicesExpression(ie->getExpr2());
             yices_expr e3 = makeYicesExpression(ie->getExpr3());
+            p.ite_ops++;
             return yices_mk_ite(ctx, e1, e2, e3);
         }
         case Expression::App: {
@@ -500,6 +558,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             yices_expr e1 = makeYicesExpression(ae->getExpr1());
             yices_expr args[1];
             args[0] = makeYicesExpression(ae->getExpr2());
+            p.app_ops++;
             return yices_mk_app(ctx, e1, args, 1); 
         }
         case Expression::Update: {
@@ -508,6 +567,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             yices_expr e2[1];
             e2[0] = makeYicesExpression(ue->getExpr2());
             yices_expr e3 = makeYicesExpression(ue->getExpr3());
+            p.update_ops++;
             return yices_mk_function_update(ctx, e1, e2, 1, e3);
         }
         case Expression::Div: {
@@ -515,6 +575,7 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             yices_expr args[2];
             args[0] = makeYicesExpression(de->getExpr1());
             args[1] = makeYicesExpression(de->getExpr2());
+            p.div_ops++;
             return yices_mk_app(ctx, intdiv_op, args, 2);
         }
         case Expression::Mod: {
@@ -522,10 +583,77 @@ yices_expr YicesSolver::makeYicesExpression(ExprPtr e) {
             yices_expr args[2];
             args[0] = makeYicesExpression(de->getExpr1());
             args[1] = makeYicesExpression(de->getExpr2());
+            p.mod_ops++;
             return yices_mk_app(ctx, intmod_op, args, 2);
+        }
+        case Expression::Impl: {
+            ImplExprPtr impl = std::static_pointer_cast<ImplExpression>(e);
+            yices_expr args[2];
+            yices_expr left = makeYicesExpression(impl->getExpr1());
+            p.not_ops++;
+            args[0] = yices_mk_not(ctx,left);
+            args[1] = makeYicesExpression(impl->getExpr2());
+            p.or_ops++;
+            return yices_mk_or(ctx, args, 2);
         }
         default:
             llvm_unreachable("Illegal expression opcode!");
             break;
+    }
+}
+
+
+void YicesSolver::createFile(ExprPtr e, int n){
+    toFile = true;
+
+    std::ofstream out("./out/out" + std::to_string(n) + ".yices");
+    std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
+    std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
+    
+    yices_expr ye = makeYicesExpression(e);
+    
+    std::cout << "\n\n(assert ";
+    yices_pp_expr(ye);
+    std::cout << ")\n";
+    std::cout << "(check)\n";
+
+    std::cout.rdbuf(coutbuf); //reset to standard output again
+    toFile=false;
+}
+
+
+void YicesSolver::createFilePushPop(std::vector<ExprPtr> exps){
+    toFile = true;
+
+    std::ofstream out("./out/out.yices");
+    std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
+    std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
+    
+    for(ExprPtr e : exps){
+        yices_expr ye = makeYicesExpression(Expression::mkNot(e));
+        std::cout << "\n\n(push)\n";
+        std::cout << "\n(assert ";
+        yices_pp_expr(ye);
+        std::cout << ")\n";
+        std::cout << "\n(check)\n";
+        std::cout << "\n(pop)\n";
+    }
+
+    std::cout.rdbuf(coutbuf); //reset to standard output again
+    toFile=false;
+}
+
+
+Profiling YicesSolver::getProfiling(){
+    return p;
+}
+
+void YicesSolver::addExpr(ExprPtr e){
+    yices_expressions.push_back(makeYicesExpression(e));
+}
+
+void YicesSolver::addExprsToContext(){
+    for(yices_expr e : yices_expressions){
+        yices_assert(ctx,e);
     }
 }

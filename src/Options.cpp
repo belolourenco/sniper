@@ -49,6 +49,30 @@ static cl::opt <std::string>
 GoldenOutputsFileName("go", cl::desc("Golden outputs"),
                   cl::init(""), cl::value_desc("string"));
 
+static cl::opt <unsigned>
+VCGen("vcgen", cl::desc("<Generate Verification conditions with the specified algorithm>"),
+               cl::init(0), cl::value_desc("int"));
+
+static cl::opt <std::string>
+UnwindAnnotation("unwind", cl::desc("<Choose between assertion or assumption unwind>"),
+                           cl::init("assert"), cl::value_desc("assume/assert"));
+
+static cl::opt <bool>
+ExecuteBench("execute_bench", cl::desc("<Choose whether execute the algorithm comparison>"),
+                           cl::init(false), cl::value_desc("true/false"));
+
+static cl::opt <bool>
+GenWhy3("gen_why3", cl::desc("<Choose whether to generate Why3 files with vcs>"),
+                           cl::init(false), cl::value_desc("true/false"));
+
+static cl::opt <bool>
+GenSMTLib2("gen_SMTLib2", cl::desc("<Choose whether to generate SMT-lib v2 files with vcs>"),
+                           cl::init(false), cl::value_desc("true/false"));
+
+static cl::opt <int>
+AssertInContext("assert_in_context", cl::desc("<Choose whether insert or not the asserts into context (if possible)>"),
+                           cl::init(0), cl::value_desc("int"));
+
 static cl::opt <bool>
 PrintModIR("print-ir",  cl::desc("Print module Intermediate Representation"));
 
@@ -165,6 +189,14 @@ ChoosedCombineMethod(cl::desc("Choose a combination method:"),
     clEnumVal(mhs,  "Minimal hitting-set"),
     clEnumValEnd));
 
+enum BackendEnum {sniper, vcs};
+cl::opt<BackendEnum> Backend(cl::desc("Chooses backend: "),
+cl::values(
+clEnumVal(sniper , "Sniper fault localization"),
+clEnumVal(vcs,   "Verification Condition Generation"),
+clEnumValEnd));
+
+
 /*==== Implementation ====*/
 
 void printVersionInformation() {
@@ -209,6 +241,46 @@ std::string Options::getTestSuiteFileName() {
 
 std::string Options::getGoldenOutputsFileName() {
     return GoldenOutputsFileName;
+}
+
+static cl::opt <bool>
+PrintIntermediateIR("print-intermediateIR", 
+            cl::init(true), cl::desc("Print the intermediate transformations of the LLVM file"));
+
+static cl::opt<bool>
+ListVCGens("list-vcgens",cl::desc("<List the available verification condition generators algorithms>"),
+                           cl::init(false), cl::value_desc("true/false"));
+
+bool Options::getListVCGens(){
+    return ListVCGens;
+}
+
+unsigned Options::getVCGen(){
+    return VCGen;
+}
+
+std::string Options::getUnwindAnnotation(){
+    return UnwindAnnotation;
+}
+
+bool Options::getExecuteBench(){
+    return ExecuteBench;
+}
+
+bool Options::getGenWhy3(){
+    return GenWhy3;
+}
+
+bool Options::getGenSMTLib2(){
+    return GenSMTLib2;
+}
+
+int Options::getAssertInContext(){
+    return AssertInContext;
+}
+
+bool Options::getPrintIntermediateIR(){
+    return PrintIntermediateIR;
 }
 
 bool Options::dbgMsg() {
@@ -289,6 +361,10 @@ unsigned Options::mcsMaxSize() {
 
 bool Options::outputCFGDotFile() {
     return OutputCFGDotFile;
+}
+
+unsigned Options::backend() {
+    return Backend;
 }
 
 unsigned Options::getCombineMethod() {

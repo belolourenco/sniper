@@ -38,6 +38,9 @@
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/DebugInfo.h"
+#include "llvm/Support/raw_ostream.h"
+
+using namespace llvm;
 
 class Expression;
 class SingleExpression;
@@ -61,6 +64,7 @@ class EqExpression;
 class NotExpression;
 class AndExpression;
 class OrExpression;
+class ImplExpression;
 class SumExpression;
 class SubExpression;
 class MulExpression;
@@ -93,6 +97,7 @@ typedef std::shared_ptr<EqExpression>           EqExprPtr;
 typedef std::shared_ptr<NotExpression>          NotExprPtr;
 typedef std::shared_ptr<AndExpression>          AndExprPtr;
 typedef std::shared_ptr<OrExpression>           OrExprPtr;
+typedef std::shared_ptr<ImplExpression>         ImplExprPtr;
 typedef std::shared_ptr<SumExpression>          SumExprPtr;
 typedef std::shared_ptr<SubExpression>          SubExprPtr;
 typedef std::shared_ptr<MulExpression>          MulExprPtr;
@@ -147,6 +152,9 @@ public:
     static const unsigned Div           = 24;
     static const unsigned Mod           = 25;
     static const unsigned Xor           = 26;
+    static const unsigned Impl          = 27;
+    static const unsigned Binary        = 28;
+    static const unsigned Trinary       = 29;
     /**@}*/
 
 private:
@@ -275,6 +283,10 @@ public:
      */
     static XorExprPtr mkXor(std::vector<ExprPtr> es);
     /**
+     * Return an expression representing \a es_1 impl es_2.
+     */
+    static ImplExprPtr     mkImpl(ExprPtr e1, ExprPtr e2);
+    /**
      * Return an expression representing (IF econd ethen eelse).
      */
     static IteExprPtr mkIte(ExprPtr econd, ExprPtr ethen, ExprPtr eelse);
@@ -329,6 +341,9 @@ public:
      */
     static ExprPtr mkOp(ExprPtr left, ExprPtr right, llvm::Instruction *i);
     
+    static BinaryExprPtr   mkBinExpr(ExprPtr e1, ExprPtr e2);
+    static TrinaryExprPtr  mkTrinExpr(ExprPtr e1, ExprPtr e2, ExprPtr e3);
+
     /**
      * Return true if \a e1 is equal to \a e2, false otherwise.
      */
@@ -390,10 +405,10 @@ public:
      */
     void setSoft() {
         unsigned l = 0;
-        llvm::Instruction *I = getInstruction();
+        Instruction *I = getInstruction();
         if (I) {
-            if (llvm::MDNode *N = I->getMetadata("dbg")) {
-                llvm::DILocation Loc(N);
+            if (MDNode *N = I->getMetadata("dbg")) {
+                DILocation Loc(N);
                 l = Loc.getLineNumber();
                 setLine(l);
             }
@@ -452,6 +467,7 @@ public:
      * of this expression.
      */
     virtual void dump() = 0;
+    virtual void print(raw_ostream &OS) = 0;
     
 };
 
@@ -489,6 +505,7 @@ class BinaryExpression : public Expression {
 protected:
     ExprPtr e1;
     ExprPtr e2;
+public:
     /**
      * Default constructor.
      *
@@ -497,7 +514,6 @@ protected:
      */
     BinaryExpression(ExprPtr _e1, ExprPtr _e2) 
     : e1(_e1),e2(_e2) { }
-public:
     /**
      * Return the left-hand side expression.
      */
@@ -509,6 +525,23 @@ public:
      */
     ExprPtr getExpr2() {
         return e2;
+    }
+    virtual unsigned getOpCode() {
+        return Expression::Binary;
+    }
+    virtual void dump() {
+        std::cout << "(";
+        e1->dump();
+        std::cout << ",";
+        e2->dump();
+        std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << ",";
+        e2->print(OS);
+        OS << ")";
     }
 };
 
@@ -522,6 +555,7 @@ protected:
     ExprPtr e1;
     ExprPtr e2;
     ExprPtr e3;
+public:
     /**
      * Default constructor.
      *
@@ -531,7 +565,6 @@ protected:
      */
     TrinaryExpression(ExprPtr _e1, ExprPtr _e2, ExprPtr _e3)
     : e1(_e1),e2(_e2),e3(_e3) { }
-public:
     /**
      * Return the first expression.
      */
@@ -550,6 +583,27 @@ public:
     ExprPtr getExpr3() {
         return e3;
     }    
+    virtual unsigned getOpCode() {
+        return Expression::Trinary;
+    }
+    virtual void dump() {
+        std::cout << "(";
+        e1->dump();
+        std::cout << ",";
+        e2->dump();
+        std::cout << ",";
+        e3->dump();
+        std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << ",";
+        e2->print(OS);
+        OS << ",";
+        e3->print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -606,6 +660,9 @@ public:
     virtual void dump() {
         std::cout << "true";
     }
+    virtual void print(raw_ostream &OS){
+        OS << "true";
+    }
 };
 
 /**
@@ -624,6 +681,9 @@ public:
     }
     virtual void dump() {
         std::cout << "false";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "false";
     }
 };
 
@@ -654,6 +714,9 @@ public:
     virtual void dump() {
         std::cout << num;
     }
+    virtual void print(raw_ostream &OS){
+        OS << num;
+    }
 };
 
 /**
@@ -683,6 +746,9 @@ public:
     virtual void dump() {
         std::cout << num;
     }
+    virtual void print(raw_ostream &OS){
+        OS << num;
+    }
 };
 
 /**
@@ -708,8 +774,8 @@ public:
     virtual void dump() {
         std::cout << name;
     }
-    virtual ~BoolVarExpression() {
-        NbBoolVariables--;
+    virtual void print(raw_ostream &OS){
+        OS << name;
     }
 };
 
@@ -735,8 +801,8 @@ public:
     virtual void dump() {
         std::cout << name;
     }
-    virtual ~IntVarExpression() {
-        NbIntVariables--;
+    virtual void print(raw_ostream &OS){
+        OS << name;
     }
 };
 
@@ -760,6 +826,9 @@ public:
     virtual void dump() {
         std::cout << name;
     }
+    virtual void print(raw_ostream &OS){
+        OS << name;
+    }
 };
 
 /**
@@ -776,7 +845,7 @@ public:
      *
      * \param s A string to parse into an expression.
      */
-    ToParseExpression(std::string s) : str(s) { }
+    ToParseExpression(std::string s);
     /**
      * Return the parsed string.
      */
@@ -788,6 +857,9 @@ public:
     }
     virtual void dump() {
         std::cout << str;
+    }
+    virtual void print(raw_ostream &OS){
+        OS << str;
     }
 };
 
@@ -816,6 +888,13 @@ public:
         e2->dump();
         std::cout << ")";
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " >= ";
+        e2 -> print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -842,6 +921,13 @@ public:
         std::cout << " ";
         e2->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " > ";
+        e2 -> print(OS);
+        OS << ")";
     }
 };
 
@@ -870,6 +956,13 @@ public:
         e2->dump();
         std::cout << ")";
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " <= ";
+        e2 -> print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -896,6 +989,13 @@ public:
         std::cout << " ";
         e2->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " < ";
+        e2 -> print(OS);
+        OS << ")";
     }
 };
 
@@ -924,6 +1024,13 @@ public:
         e2->dump();
         std::cout << ")";
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " != ";
+        e2 -> print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -950,6 +1057,13 @@ public:
         std::cout << " ";
         e2->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " = ";
+        e2 -> print(OS);
+        OS << ")";
     }
 };
 
@@ -981,6 +1095,11 @@ public:
         std::cout << "(not ";
         e->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(not ";
+        e -> print(OS);
+        OS << ")";
     }
 };
 
@@ -1024,6 +1143,18 @@ public:
                 }
             }
             std::cout << ")";
+        }
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        std::vector<ExprPtr>::iterator it;
+        for(it = exprs.begin(); it != exprs.end(); ++it) {
+            ExprPtr e = *it;
+            e->print(OS);
+            if(it + 1 == exprs.end())            
+                OS << ")";
+            else
+                OS << " && ";
         }
     }
 };
@@ -1070,6 +1201,18 @@ public:
             std::cout << ")";
         }
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        std::vector<ExprPtr>::iterator it;
+        for(it = exprs.begin(); it != exprs.end(); ++it) {
+            ExprPtr e = *it;
+            e->print(OS);
+            if(it + 1 == exprs.end())            
+                OS << ")";
+            else
+                OS << " || ";
+        }
+    }
 };
 
 /**
@@ -1114,6 +1257,53 @@ public:
             std::cout << ")";
         }
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        std::vector<ExprPtr>::iterator it;
+        for(it = exprs.begin(); it != exprs.end(); ++it) {
+            ExprPtr e = *it;
+            e->print(OS);
+            if(it + 1 == exprs.end())            
+                OS << ")";
+            else
+                OS << " ^ ";
+        }
+    }
+};
+
+/**
+ * \class ImplExpression
+ *
+ * \brief An expression representing \a e1 -> e2.
+ */
+class ImplExpression : public BinaryExpression {
+public:
+    /**
+     * Constructor.
+     *
+     * \param _e1 Left-hand side expression.
+     * \param _e2 Right-hand side expression.
+     */
+    ImplExpression(ExprPtr e1, ExprPtr e2)
+    : BinaryExpression(e1, e2) {}
+    virtual unsigned getOpCode() {
+        return Expression::Impl;
+    }
+    virtual void dump() {
+        std::cout << "(impl ";
+        std::vector<ExprPtr>::iterator it;
+        e1 -> dump();
+        std::cout << " ";
+        e2 -> dump();      
+        std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1 -> print(OS);
+        OS << " -> ";
+        e2 -> print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -1156,6 +1346,18 @@ public:
                 }
             }
             std::cout << ")";
+        }
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        std::vector<ExprPtr>::iterator it;
+        for(it = exprs.begin(); it != exprs.end(); ++it) {
+            ExprPtr e = *it;
+            e->print(OS);
+            if(it + 1 == exprs.end())            
+                OS << ")";
+            else
+                OS << " + ";
         }
     }
 };
@@ -1202,6 +1404,18 @@ public:
             std::cout << ")";
         }
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        std::vector<ExprPtr>::iterator it;
+        for(it = exprs.begin(); it != exprs.end(); ++it) {
+            ExprPtr e = *it;
+            e->print(OS);
+            if(it + 1 == exprs.end())            
+                OS << ")";
+            else
+                OS << " - ";
+        }
+    }
 };
 
 /**
@@ -1246,6 +1460,18 @@ public:
             std::cout << ")";
         }
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        std::vector<ExprPtr>::iterator it;
+        for(it = exprs.begin(); it != exprs.end(); ++it) {
+            ExprPtr e = *it;
+            e->print(OS);
+            if(it + 1 == exprs.end())            
+                OS << ")";
+            else
+                OS << " * ";
+        }
+    }
 };
 
 /**
@@ -1273,6 +1499,13 @@ public:
         e2->dump();
         std::cout << ")";
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << " / ";
+        e2->print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -1299,6 +1532,13 @@ public:
         std::cout << " ";
         e2->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << " %% ";
+        e2->print(OS);
+        OS << ")";
     }
 };
 
@@ -1332,6 +1572,15 @@ public:
         e3->dump();
         std::cout << ")";
     }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << " ? ";
+        e2->print(OS);
+        OS << " : ";
+        e3->print(OS);
+        OS << ")";
+    }
 };
 
 /**
@@ -1359,6 +1608,13 @@ public:
         std::cout << " ";
         e2->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << " ";
+        e2->print(OS);
+        OS << ")";
     }
 };
 
@@ -1390,6 +1646,15 @@ public:
         std::cout << ") ";
         e3->dump();
         std::cout << ")";
+    }
+    virtual void print(raw_ostream &OS){
+        OS << "(";
+        e1->print(OS);
+        OS << "[";
+        e2->print(OS);
+        OS << "] =";
+        e3->print(OS);
+        OS << ")";
     }
 };
 

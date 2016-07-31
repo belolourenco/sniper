@@ -64,6 +64,14 @@ ToParseExprPtr Expression::parseExpression(std::string s) {
     exit(1);
 }
 
+BinaryExprPtr Expression::mkBinExpr(ExprPtr e1, ExprPtr e2){
+    return std::make_shared<BinaryExpression>(e1,e2);
+}
+
+TrinaryExprPtr Expression::mkTrinExpr(ExprPtr e1, ExprPtr e2, ExprPtr e3){
+    return std::make_shared<TrinaryExpression>(e1,e2,e3);
+}
+
 NotExprPtr Expression::mkNot(ExprPtr e1) {
     return std::make_shared<NotExpression>(e1);
 }
@@ -114,6 +122,10 @@ XorExprPtr Expression::mkXor(ExprPtr e1, ExprPtr e2) {
 
 XorExprPtr Expression::mkXor(std::vector<ExprPtr> es) {
     return std::make_shared<XorExpression>(es);
+}
+
+ImplExprPtr Expression::mkImpl(ExprPtr e1, ExprPtr e2){
+    return std::make_shared<ImplExpression>(e1,e2);
 }
 
 IteExprPtr Expression::mkIte(ExprPtr econd, ExprPtr ethen, ExprPtr eelse) {

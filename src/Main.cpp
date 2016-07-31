@@ -42,6 +42,7 @@
 #include "Options.h"
 #include "Frontend/Frontend.h"
 #include "Backends/SniperBackend/SniperBackend.h"
+#include "Backends/VCGens/VCGenFrontend.h"
 
 using namespace llvm;
 
@@ -108,6 +109,16 @@ int main(int argc, char **argv) {
         if(opt->dbgMsg())
             std::cout << "Bitcode file loaded\n";
     
+        // RUN VCGen
+        if(opt -> backend() == 1){
+            std::cout << "Launching VCGen backend\n";
+            VCGenFrontend *vcgen = new VCGenFrontend(llvmMod, opt, &outs());
+            vcgen -> init();
+            vcgen -> launch();
+            vcgen -> finish();
+            return 0;
+        }
+
         // Run frontend
         if(opt->dbgMsg())
             std::cout << "Launching frontend\n";

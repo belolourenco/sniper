@@ -58,10 +58,28 @@ sniper_SOURCES = Main.cpp \
 		Logic/BMC.cpp \
 		Logic/Combine.cpp \
 		Logic/Expression.cpp \
+		Logic/ExprUtils.cpp \
 		Logic/Formula.cpp \
 		Logic/YicesSolver.cpp \
 		Profile/ProgramProfile.cpp \
 		Profile/ProgramTrace.cpp \
-		Utils/Utils.cpp
+		Profile/ExpressionProfilling.cpp \
+		Utils/Utils.cpp \
+		Logic/Why3.cpp \
+		Logic/Why3Gen.cpp \
+		Logic/SMTLib2.cpp \
+		Frontend/RmLoopPass.cpp \
+		Frontend/VarsForArrays.cpp \
+		Backends/VCGens/Utils/ListExpr.cpp \
+		Backends/VCGens/Utils/PairListExpr.cpp \
+		Backends/VCGens/Utils/Debug.cpp \
+		Backends/VCGens/Utils/AuxFuncsPass.cpp \
+		Backends/VCGens/VCGenPass.cpp \
+		Backends/VCGens/SolveVCs.cpp \
+		Backends/VCGens/Algorithms/SEPass.cpp \
+		Backends/VCGens/Algorithms/CNFGen.cpp \
+		Backends/VCGens/Algorithms/SPGen.cpp \
+		Backends/VCGens/Algorithms/LinGen.cpp \
+		Backends/VCGens/VCGenFrontend.cpp 
 
 #dist_noinst_SCRIPTS = autogen.sh

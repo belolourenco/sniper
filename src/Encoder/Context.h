@@ -98,6 +98,10 @@ private:
     std::string assertVarName;
     unsigned arrayCheckId;
     std::vector<ExprPtr> arrayCheckExprs;
+
+    // Array handling
+    Value *oldArray;
+    Value *newArray;
     
 public:
     /**
@@ -265,6 +269,13 @@ public:
      */
     void propagatePointers(BasicBlock *bb, BasicBlock *predbb);
 
+    // Array handling
+    void arrayVars(const std::set<Value*> &arrayValues);
+    void setOldArrayName(Value *v){oldArray = v;}
+    void setNewArrayName(Value *v){newArray = v;}
+    Value* getOldArrayName(){return oldArray;}
+    Value* getNewArrayName(){return newArray;}
+    
 private:
     /**
      * Dump to the standard output the current context.

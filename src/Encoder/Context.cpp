@@ -412,6 +412,15 @@ void Context::propagatePointers(BasicBlock *bb, BasicBlock *nextbb) {
     this->bb2id[nextbb] = this->bb2id[bb];
 }
 
+
+void Context::arrayVars(const std::set<Value*> &arrayValues){
+    for(std::set<Value*>::iterator it = arrayValues.begin(); it != arrayValues.end();it++){
+        ExprPtr expr = Expression::mkIntToIntVar((*it) -> getName());
+        this->val2expr[*it] = expr;
+    }
+}
+
+
 // =============================================================================
 // dump
 // 

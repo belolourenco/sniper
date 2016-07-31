@@ -79,6 +79,38 @@ public:
      */
     std::string getGoldenOutputsFileName();
     /**
+    * Returns whether or not the option to list all possible VCGens was set
+    */
+    bool getListVCGens();
+    /**
+    * Returns the selected VCGen by the user
+    */
+    unsigned getVCGen();
+    /**
+    * Returns the selected unwinding annotation (assume/assert)
+    */
+    std::string getUnwindAnnotation();
+    /**
+    * Returns whether the user selected the benchmark to be executed or not
+    */
+    bool getExecuteBench();
+    /**
+    * Returns whether the user chose to use Why3
+    */
+    bool getGenWhy3();
+    /**
+    * Returns whether the user chose to generate an SMT-LIB v2 file
+    */
+    bool getGenSMTLib2();
+    /**
+    * Returns whether the user chose to have asserts in contexts or not
+    */
+    int getAssertInContext();
+    /**
+    * Returns whether the user chose to generate files with the intermediate steps
+    */
+    bool getPrintIntermediateIR();
+    /**
      * Return \a true if debug messages are diplayed, false otherwise.
      */
     bool dbgMsg();
@@ -186,6 +218,10 @@ public:
      * Return the combination method (FLA, PWU, MHS) to be used.
      */
     unsigned getCombineMethod();
+    /** 
+    * the selected backend: SNIPER or VCGen
+    */
+    unsigned backend();
     
 private:
     /**

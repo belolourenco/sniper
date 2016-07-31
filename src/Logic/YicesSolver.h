@@ -38,7 +38,8 @@
 
 #include "Expression.h"
 #include "Formula.h"
-
+#include "../Profile/ExpressionProfilling.h"
+ 
 /** 
  * \class YicesSolver
  *
@@ -57,9 +58,14 @@ private:
      */
     yices_context ctx;
     /**
-     * Integer 8, 32, 64 bit types
+     * Integer 8, 32, 64 bit types,  unbounded integers and selected integers
+     * int8_ty - yices_parse_type(ctx, "(subrange -128 127)")
+     * int32_ty - yices_parse_type(ctx, "(subrange -2147483648 2147483647)")
+     * int64_ty - yices_parse_type(ctx, "(subrange -9223372036854775808 9223372036854775807)")
+     * unbound_int_ty - yices_parse_type(ctx, "int")
+     * int_ty is the selected type for encoding integers -- one of the previous -- currently it is hard coded
      */
-    yices_type int8_ty, int32_ty, int64_ty;
+    yices_type int8_ty, int32_ty, int64_ty, unbound_int_ty, int_ty;
     /**
      * Uninterpreted function type for array: int32->int32
      */
@@ -90,11 +96,28 @@ private:
      */
     std::map<ExprPtr, yices_expr> expr2yexpr;
     
+    /*
+    * A counter for giving names to undef variables (variables with no name)
+    */
+    unsigned undef_var_count;
+    /*
+    * Used for debugging purposes. If this flag is set, the yices encoding is
+    * saved in a file that can be read by yices. The file is saved in 
+    * "./out/out?.yices".
+    */
+    bool toFile;
+    /*
+    * Used to encode one expression at a time. Expressions can be added to
+    * this vector using the addExpr (one at a time) and later they can be
+    * added to the yices context using the addExprsToContext.
+    */
+    std::vector<yices_expr> yices_expressions;
+    
 public:
     /**
      * Default constructor.
      */
-    YicesSolver() : ctx(0), model(NULL) { }
+    YicesSolver() : ctx(0), model(NULL), undef_var_count(0), toFile(false) { }
     /**
      * Destructor.
      */
@@ -313,7 +336,16 @@ public:
      * This function deletes the logical context and the current model.
      */
     void clean();
-    
+
+    Profiling p;
+    Profiling getProfiling();
+
+    void createFile(ExprPtr e, int n);
+    void createFilePushPop(std::vector<ExprPtr> exps);
+
+    void addExpr(ExprPtr e);
+    void addExprsToContext();
+
 private:
     /**
      * \brief Return a yices expression representing the SNIPER expression

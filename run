@@ -39,7 +39,7 @@ if [ ! -f src/sniper ]; then
     exit 1
 fi
 
-clang-mp-3.3 $2 -S -emit-llvm -O0 -gline-tables-only -o $2.bc 
+clang $2 -S -emit-llvm -O0 -gline-tables-only -o $2.bc 
 echo "Bitecode generated"
 
 # Bytecode file exists
@@ -71,6 +71,14 @@ then
     	# TCAS/IO - HFTF
     	time ./src/sniper -dbg-msg -v -inst -ce -htf -function $1 -cfile $2 $2.bc -loc 173 -ts ../sniper_examples/tcas_nomain_ret/testcases-argok.txt -go ../sniper_examples/tcas_nomain_ret/golden_outputs.txt
     	;;
+    "8")
+      # VCGens
+      ./src/sniper -vcs -function=$1 -cfile=$2 -execute_bench=false -unwind=$4 -unroll=$5 -vcgen=$6 -assert_in_context=$7 -print-intermediateIR=false -gen_why3=$8 -gen_SMTLib2=$9 $2.bc
+      ;;
+    "9")
+      # Run as a benchmark
+      ./src/sniper -vcs -function=$1 -cfile=$2 -execute_bench=true  -unwind=$4 -unroll=$5 -vcgen=$6 -assert_in_context=$7 -print-intermediateIR=false -gen_why3=$8 -gen_SMTLib2=$9 $2.bc
+      ;;
     *)
     	echo "invalid option (x_X)"
     	;;
